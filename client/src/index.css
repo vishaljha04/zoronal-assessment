@@ -113,3 +113,28 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Premium form & component styles for Reviewly */
+input, textarea, select {
+  font-family: var(--sans);
+  font-size: 15px;
+  transition: all 0.15s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(170, 59, 255, 0.08);
+}
+
+button {
+  font-family: var(--sans);
+}
+
+/* Smooth animations */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Card hover lift already handled inline */
