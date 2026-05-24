@@ -58,7 +58,9 @@ const CompanyDetailsPage = () => {
     if (navigator.share) {
       try {
         await navigator.share({ title: company.name, text });
-      } catch (_) {}
+      } catch {
+        // User cancelled share
+      }
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success('Link copied to clipboard');

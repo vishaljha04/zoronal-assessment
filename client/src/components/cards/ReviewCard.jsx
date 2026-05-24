@@ -38,9 +38,9 @@ const ReviewCard = ({ review, onLikeUpdate }) => {
           text: text,
         });
         toast.success('Shared successfully');
-      } catch (err) {
-        // user cancelled
-      }
+    } catch {
+      // user cancelled
+    }
     } else {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(text);

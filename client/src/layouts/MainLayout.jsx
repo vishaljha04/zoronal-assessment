@@ -1,10 +1,8 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Plus, Search } from 'lucide-react';
-import { useState } from 'react';
+import { Plus } from 'lucide-react';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <nav className="border-b border-border bg-white/80 backdrop-blur-md sticky top-0 z-40">
