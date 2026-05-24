@@ -1,62 +1,58 @@
-import { MapPin, Calendar, ArrowRight } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import StarRating from '../StarRating';
-import { formatFoundedDate, truncate } from '../../utils/formatters';
+import { formatDMY } from '../../utils/formatters';
 
 const CompanyCard = ({ company }) => {
   return (
-    <div className="group bg-[var(--surface)] border border-border rounded-2xl p-6 flex flex-col transition-all hover:shadow-custom hover:-translate-y-0.5">
-      <div className="flex items-start gap-4 mb-4">
-        <div className="w-14 h-14 rounded-xl border border-border overflow-hidden flex-shrink-0 bg-[var(--surface)]">
-          <img
-            src={company.logo}
-            alt={`${company.name} logo`}
-            className="w-full h-full object-contain p-1"
-            onError={(e) => {
-              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=aa3bff&color=fff&size=56`;
-            }}
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-xl text-text-h truncate group-hover:text-accent transition-colors">
-            {company.name}
-          </h3>
-          <div className="flex items-center gap-1.5 text-sm text-text mt-1">
-            <MapPin size={14} />
-            <span>{company.location}</span>
+    <div className="bg-white border border-border rounded-md shadow-[0_6px_18px_rgba(0,0,0,0.08)] px-6 py-5">
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <div className="flex items-center gap-5 flex-1 min-w-0">
+          <div className="w-[84px] h-[70px] rounded-md bg-[#0b1030] overflow-hidden flex items-center justify-center shrink-0">
+            <img
+              src={company.logo}
+              alt={`${company.name} logo`}
+              className="w-full h-full object-contain p-3 bg-white"
+              onError={(e) => {
+                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=0b1030&color=fff&size=96`;
+              }}
+            />
+          </div>
+
+          <div className="min-w-0">
+            <div className="font-semibold text-text-h truncate">{company.name}</div>
+            <div className="mt-1 flex items-center gap-2 text-xs text-[#8f8f8f] min-w-0">
+              <MapPin size={14} className="text-[#9b9b9b]" />
+              <div className="truncate">{company.location}</div>
+            </div>
+
+            <div className="mt-2 flex items-center gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-text-h">{(company.averageRating || 0).toFixed(1)}</span>
+                <StarRating rating={company.averageRating || 0} size={14} />
+              </div>
+              <div className="text-sm text-text-h">
+                <span className="font-semibold">{company.totalReviews || 0}</span> Reviews
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <p className="text-sm leading-relaxed text-text mb-5 flex-1">
-        {truncate(company.description, 110)}
-      </p>
-
-      <div className="flex items-center justify-between text-xs text-text mb-4">
-        <div className="flex items-center gap-1.5">
-          <Calendar size={14} />
-          <span>Founded {formatFoundedDate(company.foundedOn)}</span>
+        <div className="flex items-center justify-between md:flex-col md:items-end gap-3">
+          <div className="text-[10px] text-[#9b9b9b] md:mb-1">
+            Founded on {company.foundedOn ? formatDMY(company.foundedOn) : '--'}
+          </div>
+          <Link
+            to={`/companies/${company._id}`}
+            className="inline-flex items-center justify-center h-9 px-5 rounded-md bg-[#2f2f2f] text-white text-sm shadow-sm hover:bg-[#1f1f1f]"
+          >
+            Detail Review
+          </Link>
         </div>
-      </div>
-
-      <div className="flex items-center justify-between pt-4 border-t border-border">
-        <div>
-          <StarRating rating={company.averageRating || 0} size={16} />
-          <span className="text-xs text-text ml-1">
-            ({company.totalReviews || 0} reviews)
-          </span>
-        </div>
-
-        <Link
-          to={`/companies/${company._id}`}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:gap-2 transition-all group-hover:text-accent"
-        >
-          View Details
-          <ArrowRight size={16} />
-        </Link>
       </div>
     </div>
   );
 };
 
 export default CompanyCard;
+

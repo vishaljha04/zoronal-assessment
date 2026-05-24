@@ -12,26 +12,25 @@ const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/25">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 10 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
-          className={`bg-[var(--surface)] border border-border rounded-3xl shadow-2xl w-full ${sizeClasses[size]} overflow-hidden`}
+          className={`relative bg-white border border-border rounded-2xl shadow-2xl w-full ${sizeClasses[size]} overflow-hidden`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-            <h2 className="text-xl font-semibold text-text-h">{title}</h2>
-            <button
-              onClick={onClose}
-              className="p-2 -mr-2 text-text hover:text-text-h transition-colors rounded-full hover:bg-accent-bg"
-            >
-              <X size={20} />
-            </button>
-          </div>
-          <div className="p-6">
-            {children}
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 p-2 text-[#6f6f6f] hover:text-black transition-colors rounded-full"
+          >
+            <X size={18} />
+          </button>
+
+          <div className="px-8 pt-10 pb-7">
+            <h2 className="text-[18px] font-semibold text-text-h text-center">{title}</h2>
+            <div className="mt-6">{children}</div>
           </div>
         </motion.div>
       </div>

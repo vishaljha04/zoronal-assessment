@@ -6,7 +6,7 @@
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #ffffff;
-  --page-bg: #f7f6fb;
+  --page-bg: #e6e6e6;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
@@ -16,6 +16,9 @@
   --surface: #ffffff;
   --surface-2: #fbfaff;
   --glass: rgba(255, 255, 255, 0.72);
+  --brand-from: #d100f3;
+  --brand-to: #002bc5;
+  --star: #f4b400;
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
@@ -63,9 +66,7 @@
 
 body {
   margin: 0;
-  background: radial-gradient(900px 500px at 12% 0%, rgba(170, 59, 255, 0.12), transparent 60%),
-    radial-gradient(800px 480px at 88% 10%, rgba(170, 59, 255, 0.08), transparent 55%),
-    var(--page-bg);
+  background: var(--page-bg);
 }
 
 #root {

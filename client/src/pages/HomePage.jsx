@@ -1,41 +1,42 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Filter, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ChevronDown, MapPin } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { companyService } from '../services/companyService';
 import { useDebounce } from '../hooks/useDebounce';
 import CompanyCard from '../components/cards/CompanyCard';
-import { SORT_OPTIONS, ITEMS_PER_PAGE } from '../constants';
-import heroImg from '../assets/hero.png';
+import { ITEMS_PER_PAGE } from '../constants';
+import Modal from '../components/ui/Modal';
+import AddCompanyForm from '../components/forms/CompanyForm';
 
 const HomePage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [cityFilter, setCityFilter] = useState('');
-  const [sortBy, setSortBy] = useState('newest');
-  const [page, setPage] = useState(1);
+  const [params] = useSearchParams();
+  const searchTerm = params.get('q') || '';
 
-  const debouncedSearch = useDebounce(searchTerm, 450);
-  const debouncedCity = useDebounce(cityFilter, 450);
+  const [cityFilter, setCityFilter] = useState('');
+  const [sortBy, setSortBy] = useState('name-az');
+  const [page, setPage] = useState(1);
+  const [isAddCompanyOpen, setIsAddCompanyOpen] = useState(false);
+
+  const debouncedSearch = useDebounce(searchTerm, 350);
+  const debouncedCity = useDebounce(cityFilter, 350);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['companies', debouncedSearch, debouncedCity, sortBy, page],
-    queryFn: () => companyService.getAll({
-      search: debouncedSearch || undefined,
-      city: debouncedCity || undefined,
-      sort: sortBy,
-      page,
-      limit: ITEMS_PER_PAGE,
-    }),
+    queryFn: () =>
+      companyService.getAll({
+        search: debouncedSearch || undefined,
+        city: debouncedCity || undefined,
+        sort: sortBy,
+        page,
+        limit: ITEMS_PER_PAGE,
+      }),
     keepPreviousData: true,
   });
 
   const companies = data?.data || [];
   const pagination = data?.pagination;
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    setPage(1);
-  };
+  const totalFound = useMemo(() => pagination?.total ?? companies.length, [pagination, companies.length]);
 
   const handleCityChange = (e) => {
     setCityFilter(e.target.value);
@@ -49,135 +50,122 @@ const HomePage = () => {
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-    window.scrollTo({ top: 120, behavior: 'smooth' });
+    window.scrollTo({ top: 80, behavior: 'smooth' });
   };
 
-  // Skeleton loader
   const SkeletonCard = () => (
-    <div className="border border-border rounded-2xl p-6 animate-pulse">
-      <div className="flex gap-4 mb-4">
-        <div className="w-14 h-14 bg-border rounded-xl" />
+    <div className="border border-border rounded-md p-5 animate-pulse bg-white shadow-sm">
+      <div className="flex items-center gap-5">
+        <div className="w-[76px] h-[64px] bg-border rounded-md" />
         <div className="flex-1 space-y-2">
-          <div className="h-5 bg-border rounded w-3/4" />
-          <div className="h-3 bg-border rounded w-1/2" />
+          <div className="h-4 bg-border rounded w-2/5" />
+          <div className="h-3 bg-border rounded w-3/4" />
+          <div className="h-3 bg-border rounded w-1/4" />
         </div>
+        <div className="w-[110px] h-8 bg-border rounded" />
       </div>
-      <div className="space-y-2 mb-8">
-        <div className="h-3 bg-border rounded" />
-        <div className="h-3 bg-border rounded w-5/6" />
-      </div>
-      <div className="h-4 bg-border rounded w-1/3" />
     </div>
   );
 
   return (
-    <div className="max-w-[1126px] mx-auto pt-10">
-      {/* Hero / Header */}
-      <div className="mb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-end">
-          <div className="text-left">
-            <h1 className="text-[52px] leading-none tracking-[-1.5px] font-semibold text-text-h mb-3">
-              Discover great<br />companies.
-            </h1>
-            <p className="text-xl text-text max-w-md">
-              Real reviews from real employees. Find your next workplace.
-            </p>
+    <div className="pt-8 pb-8">
+      <div className="text-[22px] text-[#8b8b8b]">Home</div>
 
-            <Link 
-              to="/companies/new"
-              className="hidden md:inline-flex mt-6 items-center gap-2 px-6 py-3 rounded-2xl bg-accent text-white font-medium hover:bg-[#9a2ee6] active:scale-[0.985] transition"
+      <div className="mt-6 border-t border-border pt-6">
+        <div className="flex flex-col lg:flex-row lg:items-end gap-6">
+          <div className="flex items-end gap-4 flex-1 flex-wrap">
+            <div className="min-w-[260px]">
+              <div className="text-[11px] text-text mb-2">Select City</div>
+              <div className="relative">
+                <input
+                  value={cityFilter}
+                  onChange={handleCityChange}
+                  placeholder="Indore, Madhya Pradesh, India"
+                  className="w-full h-10 pl-3 pr-10 rounded-md border border-border text-sm outline-none"
+                />
+                <MapPin size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-accent" />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="h-10 px-5 rounded-md text-white text-sm font-medium shadow-sm bg-gradient-to-r from-[var(--brand-from)] to-[var(--brand-to)]"
             >
-              <Plus size={20} /> Add a Company
-            </Link>
+              Find Company
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsAddCompanyOpen(true)}
+              className="h-10 px-5 rounded-md text-white text-sm font-medium shadow-sm bg-gradient-to-r from-[var(--brand-from)] to-[var(--brand-to)]"
+            >
+              + Add Company
+            </button>
           </div>
 
-          <div className="hidden lg:block relative">
-            <div className="absolute -inset-6 rounded-[36px] bg-gradient-to-br from-[rgba(170,59,255,0.18)] via-transparent to-transparent blur-2xl" />
-            <div className="relative rounded-[36px] border border-border bg-[var(--surface-2)] p-6 shadow-sm overflow-hidden">
-              <img src={heroImg} alt="" className="w-full h-auto select-none pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(255,255,255,0.10)] to-transparent" />
+          <div className="w-full lg:w-[180px]">
+            <div className="text-[11px] text-text mb-2">Sort:</div>
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={handleSortChange}
+                className="w-full h-10 px-3 pr-8 rounded-md border border-border text-sm outline-none appearance-none bg-white"
+              >
+                <option value="name-az">Name</option>
+                <option value="newest">Date</option>
+                <option value="highest-rated">Rating</option>
+              </select>
+              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-text" />
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col lg:flex-row gap-4 mb-8 sticky top-[79px] bg-[var(--bg)] z-30 py-4 -mx-1 px-1">
-        <div className="flex-1 relative">
-          <Search className="absolute left-4 top-4 text-text" size={18} />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Search companies by name..."
-            className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-border focus:border-accent focus:ring-1 focus:ring-accent/30 bg-[var(--surface)] placeholder:text-text outline-none text-base"
-          />
-        </div>
-
-        <div className="flex gap-3 flex-1 lg:flex-none">
-          <div className="relative flex-1 lg:w-48">
-            <Filter className="absolute left-4 top-4 text-text" size={18} />
-            <input
-              type="text"
-              value={cityFilter}
-              onChange={handleCityChange}
-              placeholder="Filter by city"
-              className="w-full pl-11 py-3.5 rounded-2xl border border-border focus:border-accent bg-[var(--surface)] outline-none"
-            />
-          </div>
-
-          <select
-            value={sortBy}
-            onChange={handleSortChange}
-            className="flex-1 lg:w-52 px-4 py-3.5 rounded-2xl border border-border bg-[var(--surface)] focus:border-accent outline-none cursor-pointer text-sm font-medium"
-          >
-            {SORT_OPTIONS.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Results */}
       {error && (
         <div className="text-center py-12 text-red-500">
-          Failed to load companies. <button onClick={() => refetch()} className="underline">Retry</button>
+          Failed to load companies.{' '}
+          <button onClick={() => refetch()} className="underline">
+            Retry
+          </button>
         </div>
       )}
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+        <div className="mt-10 space-y-5">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       ) : companies.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-border rounded-3xl">
-          <div className="text-6xl mb-4">🔍</div>
+        <div className="text-center py-20 border border-dashed border-border rounded-3xl mt-10">
           <h3 className="text-2xl font-semibold mb-2 text-text-h">No companies found</h3>
-          <p className="text-text mb-6">Try adjusting your search or filters.</p>
-          <Link to="/companies/new" className="inline-flex items-center gap-2 text-accent font-medium">
-            <Plus size={18} /> Add the first company
-          </Link>
+          <p className="text-text mb-6">Try adjusting your filters.</p>
+          <button
+            type="button"
+            onClick={() => setIsAddCompanyOpen(true)}
+            className="h-10 px-5 rounded-md text-white text-sm font-medium shadow-sm bg-gradient-to-r from-[var(--brand-from)] to-[var(--brand-to)]"
+          >
+            + Add Company
+          </button>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+          <div className="mt-10 text-[11px] text-[#9b9b9b] mb-3">Result Found: {totalFound}</div>
+
+          <div className="space-y-6 mb-10">
             {companies.map((company) => (
               <CompanyCard key={company._id} company={company} />
             ))}
           </div>
 
-          {/* Pagination */}
           {pagination && pagination.pages > 1 && (
             <div className="flex justify-center items-center gap-2">
               {Array.from({ length: pagination.pages }, (_, i) => i + 1).map((p) => (
                 <button
                   key={p}
                   onClick={() => handlePageChange(p)}
-                  className={`w-10 h-10 rounded-2xl text-sm font-medium transition ${
-                    p === page 
-                      ? 'bg-accent text-white' 
-                      : 'border border-border hover:bg-accent-bg text-text-h'
+                  className={`w-10 h-10 rounded-md text-sm font-medium transition ${
+                    p === page ? 'bg-black text-white' : 'border border-border hover:bg-gray-50 text-text-h'
                   }`}
                 >
                   {p}
@@ -187,8 +175,13 @@ const HomePage = () => {
           )}
         </>
       )}
+
+      <Modal isOpen={isAddCompanyOpen} onClose={() => setIsAddCompanyOpen(false)} title="Add Company" size="md">
+        <AddCompanyForm onSuccess={() => setIsAddCompanyOpen(false)} onClose={() => setIsAddCompanyOpen(false)} />
+      </Modal>
     </div>
   );
 };
 
 export default HomePage;
+

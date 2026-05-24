@@ -1,39 +1,42 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Search } from 'lucide-react';
+import logo from '../assets/logo.svg';
 
 const Navbar = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const q = params.get('q') || '';
+
+  const onSearchChange = (e) => {
+    const next = e.target.value;
+    const nextParams = new URLSearchParams(params);
+    if (next) nextParams.set('q', next);
+    else nextParams.delete('q');
+    setParams(nextParams, { replace: true });
+    if (location.pathname !== '/') navigate({ pathname: '/', search: nextParams.toString() }, { replace: false });
+  };
 
   return (
-    <nav className="border-b border-border bg-[var(--glass)] backdrop-blur-md sticky top-0 z-40">
-      <div className="max-w-[1126px] mx-auto px-6 flex items-center justify-between h-20">
+    <nav className="border-b border-border bg-white sticky top-0 z-40">
+      <div className="max-w-[1126px] mx-auto px-6 flex items-center justify-between h-[72px]">
         <Link to="/" className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-accent flex items-center justify-center">
-            <span className="text-white font-bold text-2xl tracking-tighter">R</span>
-          </div>
-          <div>
-            <div className="font-semibold text-2xl tracking-tight text-text-h">Reviewly</div>
-            <div className="text-[10px] text-text -mt-1.5">Company Reviews</div>
-          </div>
+          <img src={logo} alt="Review & Rate" className="h-8 w-auto" />
         </Link>
 
-        <div className="flex items-center gap-3 text-sm">
-          <NavLink 
-            to="/" 
-            className={({ isActive }) => 
-              `px-4 py-2 rounded-xl font-medium transition ${isActive ? 'bg-accent-bg text-accent' : 'text-text-h hover:bg-accent-bg'}`
-            }
-          >
-            Discover
-          </NavLink>
+        <div className="hidden md:flex items-center gap-4">
+          <div className="relative">
+            <input
+              value={q}
+              onChange={onSearchChange}
+              placeholder="Search..."
+              className="w-[260px] pl-4 pr-10 py-2.5 rounded-md border border-border bg-white text-sm outline-none"
+            />
+            <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-accent" />
+          </div>
 
-          <button
-            onClick={() => navigate('/companies/new')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-accent text-white font-medium hover:bg-[#9a2ee6] active:scale-[0.985] transition text-sm"
-          >
-            <Plus size={18} />
-            Add Company
-          </button>
+          <NavLink to="/signup" className="text-sm text-text-h hover:text-accent">SignUp</NavLink>
+          <NavLink to="/login" className="text-sm text-text-h hover:text-accent">Login</NavLink>
         </div>
       </div>
     </nav>
@@ -42,14 +45,13 @@ const Navbar = () => {
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-1 px-6 pb-16">
-        {children}
-      </main>
-      <footer className="border-t border-border py-6 text-center text-xs text-text">
-        Built with {"\u2764\uFE0F"} using MERN • Premium company review platform
-      </footer>
+    <div className="min-h-screen bg-[var(--page-bg)]">
+      <div className="max-w-[1126px] mx-auto min-h-screen bg-white shadow-[0_0_24px_rgba(0,0,0,0.08)]">
+        <Navbar />
+        <main className="px-6 pb-16">
+          {children}
+        </main>
+      </div>
     </div>
   );
 };
