@@ -1,17 +1,21 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronDown, MapPin } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { companyService } from '../services/companyService';
 import { useDebounce } from '../hooks/useDebounce';
 import CompanyCard from '../components/cards/CompanyCard';
 import { ITEMS_PER_PAGE } from '../constants';
 import Modal from '../components/ui/Modal';
 import AddCompanyForm from '../components/forms/CompanyForm';
+import { useAuth } from '../context/auth.jsx';
+import toast from 'react-hot-toast';
 
 const HomePage = () => {
   const [params] = useSearchParams();
   const searchTerm = params.get('q') || '';
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const [cityFilter, setCityFilter] = useState('');
   const [sortBy, setSortBy] = useState('name-az');
@@ -96,7 +100,14 @@ const HomePage = () => {
 
             <button
               type="button"
-              onClick={() => setIsAddCompanyOpen(true)}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  toast.error('Please login to add a company');
+                  navigate(`/login?returnTo=${encodeURIComponent('/')}`);
+                  return;
+                }
+                setIsAddCompanyOpen(true);
+              }}
               className="h-10 px-5 rounded-md text-white text-sm font-medium shadow-sm bg-gradient-to-r from-[var(--brand-from)] to-[var(--brand-to)]"
             >
               + Add Company
@@ -142,7 +153,14 @@ const HomePage = () => {
           <p className="text-text mb-6">Try adjusting your filters.</p>
           <button
             type="button"
-            onClick={() => setIsAddCompanyOpen(true)}
+            onClick={() => {
+              if (!isAuthenticated) {
+                toast.error('Please login to add a company');
+                navigate(`/login?returnTo=${encodeURIComponent('/')}`);
+                return;
+              }
+              setIsAddCompanyOpen(true);
+            }}
             className="h-10 px-5 rounded-md text-white text-sm font-medium shadow-sm bg-gradient-to-r from-[var(--brand-from)] to-[var(--brand-to)]"
           >
             + Add Company
@@ -184,4 +202,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

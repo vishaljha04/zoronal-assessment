@@ -5,10 +5,11 @@ const {
   getCompanyReviews,
   likeReview,
 } = require('../controllers/reviewController');
+const { protect } = require('../middleware/auth');
 
 router.route('/:companyId')
   .get(getCompanyReviews)
-  .post(addReview);
+  .post(protect, addReview);
 
 router.patch('/like/:reviewId', likeReview);
 

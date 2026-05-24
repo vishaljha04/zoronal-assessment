@@ -45,6 +45,7 @@ const addReview = asyncHandler(async (req, res) => {
 
   const review = await Review.create({
     companyId,
+    userId: req.user._id,
     fullName,
     subject,
     reviewText,

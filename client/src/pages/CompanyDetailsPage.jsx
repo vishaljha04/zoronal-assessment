@@ -10,11 +10,15 @@ import AddReviewForm from '../components/forms/ReviewForm';
 import Modal from '../components/ui/Modal';
 import { formatDMY } from '../utils/formatters';
 import toast from 'react-hot-toast';
+import { useAuth } from '../context/auth.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const CompanyDetailsPage = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const { data: companyData, isLoading: companyLoading } = useQuery({
     queryKey: ['company', id],
@@ -101,7 +105,14 @@ const CompanyDetailsPage = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setIsReviewModalOpen(true)}
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      toast.error('Please login to add a review');
+                      navigate(`/login?returnTo=${encodeURIComponent(`/companies/${id}`)}`);
+                      return;
+                    }
+                    setIsReviewModalOpen(true);
+                  }}
                   className="mt-4 h-9 px-6 rounded-md text-white text-sm font-medium shadow-sm bg-gradient-to-r from-[var(--brand-from)] to-[var(--brand-to)]"
                 >
                   + Add Review
@@ -143,4 +154,3 @@ const CompanyDetailsPage = () => {
 };
 
 export default CompanyDetailsPage;
-

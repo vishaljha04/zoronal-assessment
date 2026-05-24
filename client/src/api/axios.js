@@ -5,6 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const api = axios.create({
   baseURL: API_URL,
   timeout: 15000,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -13,7 +14,7 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Can add auth token here later
+    // Cookie-based auth (JWT in httpOnly cookie). Authorization header fallback supported by backend.
     return config;
   },
   (error) => Promise.reject(error)

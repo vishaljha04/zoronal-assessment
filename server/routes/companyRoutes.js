@@ -5,10 +5,11 @@ const {
   getCompanies,
   getCompanyById,
 } = require('../controllers/companyController');
+const { protect } = require('../middleware/auth');
 
 router.route('/')
   .get(getCompanies)
-  .post(createCompany);
+  .post(protect, createCompany);
 
 router.route('/:id')
   .get(getCompanyById);

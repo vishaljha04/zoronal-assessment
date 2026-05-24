@@ -14,6 +14,7 @@ const createCompany = asyncHandler(async (req, res) => {
   }
 
   const company = await Company.create({
+    createdBy: req.user._id,
     name,
     logo: logo || undefined,
     description,

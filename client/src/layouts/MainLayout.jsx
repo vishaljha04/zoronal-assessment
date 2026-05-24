@@ -1,12 +1,14 @@
 import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import logo from '../assets/logo.svg';
+import { useAuth } from '../context/auth.jsx';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const q = params.get('q') || '';
+  const { user, isAuthenticated, logout } = useAuth();
 
   const onSearchChange = (e) => {
     const next = e.target.value;
@@ -35,8 +37,23 @@ const Navbar = () => {
             <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-accent" />
           </div>
 
-          <NavLink to="/signup" className="text-sm text-text-h hover:text-accent">SignUp</NavLink>
-          <NavLink to="/login" className="text-sm text-text-h hover:text-accent">Login</NavLink>
+          {isAuthenticated ? (
+            <>
+              <div className="text-sm text-text-h">{user?.name}</div>
+              <button
+                type="button"
+                onClick={logout}
+                className="text-sm text-text-h hover:text-accent"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/signup" className="text-sm text-text-h hover:text-accent">SignUp</NavLink>
+              <NavLink to="/login" className="text-sm text-text-h hover:text-accent">Login</NavLink>
+            </>
+          )}
         </div>
       </div>
     </nav>

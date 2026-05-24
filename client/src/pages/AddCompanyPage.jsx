@@ -1,8 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import AddCompanyForm from '../components/forms/CompanyForm';
+import { useAuth } from '../context/auth.jsx';
+import { useEffect } from 'react';
 
 const AddCompanyPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate(`/login?returnTo=${encodeURIComponent('/companies/new')}`, { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   const handleSuccess = (newCompany) => {
     // Navigate to the new company's detail page
