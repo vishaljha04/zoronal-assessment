@@ -39,12 +39,11 @@ const SignupPage = () => {
 
   const onSubmit = async (values) => {
     try {
-      const { confirmPassword, ...payload } = values;
-      await signup(payload);
+      await signup({ name: values.name, email: values.email, password: values.password });
       toast.success('Account created successfully');
       navigate(returnTo, { replace: true });
     } catch (error) {
-      const message = error?.response?.data?.message || error.message || 'Signup failed. Please try again.';
+      const message = error?.message || 'Signup failed. Please try again.';
       toast.error(message);
     }
   };

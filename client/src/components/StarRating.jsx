@@ -1,9 +1,9 @@
+import { useId } from 'react';
+
 const STAR_PATH =
   'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z';
 
-const StarIcon = ({ size, fillPercent = 0, className }) => {
-  const id = `star-grad-${Math.random().toString(16).slice(2)}`;
-
+const StarIcon = ({ size, fillPercent = 0, gradientId, className }) => {
   return (
     <svg
       width={size}
@@ -13,12 +13,12 @@ const StarIcon = ({ size, fillPercent = 0, className }) => {
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id={id} x1="0" y1="0" x2="24" y2="0">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="24" y2="0">
           <stop offset={`${fillPercent}%`} stopColor="var(--star)" />
           <stop offset={`${fillPercent}%`} stopColor="transparent" />
         </linearGradient>
       </defs>
-      <path d={STAR_PATH} fill={`url(#${id})`} stroke="var(--star)" strokeWidth="1" />
+      <path d={STAR_PATH} fill={`url(#${gradientId})`} stroke="var(--star)" strokeWidth="1" />
       <path d={STAR_PATH} fill="none" stroke="#d7d7d7" strokeWidth="1" />
     </svg>
   );
@@ -29,6 +29,7 @@ const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const StarRating = ({ rating, size = 18, interactive = false, onChange, showValue = false }) => {
   const safeRating = Number.isFinite(rating) ? clamp(rating, 0, 5) : 0;
   const stars = [1, 2, 3, 4, 5];
+  const gradientPrefix = useId();
 
   const handleClick = (value) => {
     if (interactive && onChange) onChange(value);
@@ -41,7 +42,7 @@ const StarRating = ({ rating, size = 18, interactive = false, onChange, showValu
         if (!interactive) {
           return (
             <span key={star} className="cursor-default">
-              <StarIcon size={size} fillPercent={fill} />
+              <StarIcon size={size} fillPercent={fill} gradientId={`${gradientPrefix}-${star}`} />
             </span>
           );
         }
@@ -54,7 +55,7 @@ const StarRating = ({ rating, size = 18, interactive = false, onChange, showValu
             className="cursor-pointer hover:scale-105 active:scale-95"
             aria-label={`Rate ${star} star`}
           >
-            <StarIcon size={size} fillPercent={fill} />
+            <StarIcon size={size} fillPercent={fill} gradientId={`${gradientPrefix}-${star}`} />
           </button>
         );
       })}

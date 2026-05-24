@@ -11,6 +11,7 @@ import Modal from '../components/ui/Modal';
 import { formatDMY } from '../utils/formatters';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/auth.jsx';
+import SafeImage from '../components/ui/SafeImage';
 
 const CompanyDetailsPage = () => {
   const { id } = useParams();
@@ -101,17 +102,17 @@ const CompanyDetailsPage = () => {
               <div className="flex items-start gap-4 sm:gap-6 min-w-0 flex-1">
                 {/* Logo */}
                 <div className="w-16 h-16 sm:w-[86px] sm:h-[72px] rounded-md bg-[#0b1030] overflow-hidden flex items-center justify-center shrink-0">
-                  <img
+                  <SafeImage
                     src={company.logo}
+                    fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(company.name || 'Company')}&background=0b1030&color=fff&size=96`}
                     alt={company.name}
                     className="w-full h-full object-contain p-2 sm:p-3 bg-white"
-                    onError={(e) => (e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=0b1030&color=fff&size=96`)}
                   />
                 </div>
 
                 {/* Details */}
                 <div className="min-w-0 flex-1">
-                  <h1 className="font-semibold text-text-h text-lg sm:text-[15px] break-words">
+                  <h1 className="font-semibold text-text-h text-lg sm:text-xl break-words">
                     {company.name}
                   </h1>
                   

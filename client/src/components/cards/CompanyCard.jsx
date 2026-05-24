@@ -2,6 +2,7 @@ import { MapPin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import StarRating from '../StarRating';
 import { formatDMY } from '../../utils/formatters';
+import SafeImage from '../ui/SafeImage';
 
 const CompanyCard = ({ company }) => {
   return (
@@ -17,13 +18,11 @@ const CompanyCard = ({ company }) => {
             
             {/* Logo */}
             <div className="w-16 h-16 sm:w-[84px] sm:h-[70px] rounded-lg bg-[#0b1030] overflow-hidden flex items-center justify-center shrink-0 group-hover:ring-2 group-hover:ring-accent/20 transition-all">
-              <img
+              <SafeImage
                 src={company.logo}
+                fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(company.name || 'Company')}&background=0b1030&color=fff&size=96`}
                 alt={`${company.name} logo`}
                 className="w-full h-full object-contain p-2 sm:p-3 bg-white"
-                onError={(e) => {
-                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=0b1030&color=fff&size=96`;
-                }}
               />
             </div>
 
