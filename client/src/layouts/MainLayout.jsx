@@ -162,7 +162,7 @@ const Navbar = () => {
 const MainLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-[var(--page-bg)]">
-      <div className="max-w-[1126px] mx-auto min-h-screen bg-white shadow-[0_0_24px_rgba(0,0,0,0.08)]">
+      <div className="max-w-full mx-auto min-h-screen bg-white shadow-[0_0_24px_rgba(0,0,0,0.08)]">
         <Navbar />
         <main className="px-4 sm:px-6 py-6 sm:py-8 pb-12 sm:pb-16">
           {children}
