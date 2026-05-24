@@ -38,14 +38,21 @@ const StarRating = ({ rating, size = 18, interactive = false, onChange, showValu
     <div className="flex items-center gap-1">
       {stars.map((star) => {
         const fill = clamp((safeRating - (star - 1)) * 100, 0, 100);
+        if (!interactive) {
+          return (
+            <span key={star} className="cursor-default">
+              <StarIcon size={size} fillPercent={fill} />
+            </span>
+          );
+        }
+
         return (
           <button
             type="button"
             key={star}
             onClick={() => handleClick(star)}
-            className={interactive ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-default'}
-            aria-label={interactive ? `Rate ${star} star` : undefined}
-            disabled={!interactive}
+            className="cursor-pointer hover:scale-105 active:scale-95"
+            aria-label={`Rate ${star} star`}
           >
             <StarIcon size={size} fillPercent={fill} />
           </button>
