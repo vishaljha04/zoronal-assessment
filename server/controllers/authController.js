@@ -67,7 +67,12 @@ const login = asyncHandler(async (req, res) => {
     throw new Error('Invalid credentials');
   }
 
-  const ok = await bcrypt.compare(password, user.passwordHash);
+  if (!user.passwordHash || typeof user.passwordHash !== 'string') {
+    res.status(401);
+    throw new Error('Invalid credentials');
+  }
+
+  const ok = await bcrypt.compare(String(password), user.passwordHash);
   if (!ok) {
     res.status(401);
     throw new Error('Invalid credentials');
@@ -104,4 +109,3 @@ const me = asyncHandler(async (req, res) => {
 });
 
 module.exports = { register, login, logout, me };
-
