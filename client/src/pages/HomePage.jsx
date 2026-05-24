@@ -6,6 +6,7 @@ import { companyService } from '../services/companyService';
 import { useDebounce } from '../hooks/useDebounce';
 import CompanyCard from '../components/cards/CompanyCard';
 import { SORT_OPTIONS, ITEMS_PER_PAGE } from '../constants';
+import heroImg from '../assets/hero.png';
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -73,21 +74,31 @@ const HomePage = () => {
     <div className="max-w-[1126px] mx-auto pt-10">
       {/* Hero / Header */}
       <div className="mb-10">
-        <div className="flex items-end justify-between">
-          <div>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-end">
+          <div className="text-left">
             <h1 className="text-[52px] leading-none tracking-[-1.5px] font-semibold text-text-h mb-3">
               Discover great<br />companies.
             </h1>
             <p className="text-xl text-text max-w-md">
               Real reviews from real employees. Find your next workplace.
             </p>
+
+            <Link 
+              to="/companies/new"
+              className="hidden md:inline-flex mt-6 items-center gap-2 px-6 py-3 rounded-2xl bg-accent text-white font-medium hover:bg-[#9a2ee6] active:scale-[0.985] transition"
+            >
+              <Plus size={20} /> Add a Company
+            </Link>
           </div>
-          <Link 
-            to="/companies/new"
-            className="hidden md:flex items-center gap-2 px-6 py-3 rounded-2xl bg-accent text-white font-medium hover:bg-[#9a2ee6] active:scale-[0.985] transition"
-          >
-            <Plus size={20} /> Add a Company
-          </Link>
+
+          <div className="hidden lg:block relative">
+            <div className="absolute -inset-6 rounded-[36px] bg-gradient-to-br from-[rgba(170,59,255,0.18)] via-transparent to-transparent blur-2xl" />
+            <div className="relative rounded-[36px] border border-border bg-[var(--surface-2)] p-6 shadow-sm overflow-hidden">
+              <img src={heroImg} alt="" className="w-full h-auto select-none pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(255,255,255,0.10)] to-transparent" />
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -100,7 +111,7 @@ const HomePage = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder="Search companies by name..."
-            className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-border focus:border-accent focus:ring-1 focus:ring-accent/30 bg-white placeholder:text-text outline-none text-base"
+            className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-border focus:border-accent focus:ring-1 focus:ring-accent/30 bg-[var(--surface)] placeholder:text-text outline-none text-base"
           />
         </div>
 
@@ -112,14 +123,14 @@ const HomePage = () => {
               value={cityFilter}
               onChange={handleCityChange}
               placeholder="Filter by city"
-              className="w-full pl-11 py-3.5 rounded-2xl border border-border focus:border-accent bg-white outline-none"
+              className="w-full pl-11 py-3.5 rounded-2xl border border-border focus:border-accent bg-[var(--surface)] outline-none"
             />
           </div>
 
           <select
             value={sortBy}
             onChange={handleSortChange}
-            className="flex-1 lg:w-52 px-4 py-3.5 rounded-2xl border border-border bg-white focus:border-accent outline-none cursor-pointer text-sm font-medium"
+            className="flex-1 lg:w-52 px-4 py-3.5 rounded-2xl border border-border bg-[var(--surface)] focus:border-accent outline-none cursor-pointer text-sm font-medium"
           >
             {SORT_OPTIONS.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>

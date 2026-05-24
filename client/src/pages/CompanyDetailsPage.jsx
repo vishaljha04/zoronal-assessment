@@ -94,9 +94,23 @@ const CompanyDetailsPage = () => {
         <ArrowLeft size={16} /> Back to all companies
       </Link>
 
+      {/* Banner */}
+      <div className="relative overflow-hidden rounded-3xl border border-border bg-[var(--surface-2)] mb-10">
+        <div className="absolute inset-0 bg-gradient-to-r from-[rgba(170,59,255,0.18)] via-transparent to-transparent" />
+        <div className="absolute -right-16 -top-24 w-72 h-72 rounded-full bg-[rgba(170,59,255,0.16)] blur-3xl" />
+        <div className="absolute -left-20 -bottom-24 w-72 h-72 rounded-full bg-[rgba(170,59,255,0.12)] blur-3xl" />
+        <div className="relative px-7 py-10 lg:px-10 lg:py-12">
+          <div className="text-sm text-text">Company Profile</div>
+          <div className="mt-2 text-3xl lg:text-4xl font-semibold tracking-tight text-text-h">Reviews, ratings, and culture.</div>
+          <div className="mt-2 text-text max-w-2xl">
+            See what people are saying, then share your experience to help others make better decisions.
+          </div>
+        </div>
+      </div>
+
       {/* Company Header */}
       <div className="flex flex-col lg:flex-row gap-8 items-start mb-10">
-        <div className="w-24 h-24 rounded-2xl border-2 border-border overflow-hidden flex-shrink-0 bg-white shadow-sm">
+        <div className="w-24 h-24 rounded-2xl border-2 border-border overflow-hidden flex-shrink-0 bg-[var(--surface)] shadow-sm">
           <img
             src={company.logo}
             alt={company.name}
@@ -159,7 +173,7 @@ const CompanyDetailsPage = () => {
           <select 
             value={sort} 
             onChange={(e) => setSort(e.target.value)}
-            className="px-4 py-2 text-sm border border-border rounded-2xl bg-white outline-none"
+            className="px-4 py-2 text-sm border border-border rounded-2xl bg-[var(--surface)] outline-none"
           >
             {REVIEW_SORT_OPTIONS.map(o => (
               <option key={o.value} value={o.value}>{o.label}</option>

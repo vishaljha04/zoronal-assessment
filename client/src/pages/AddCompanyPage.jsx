@@ -19,7 +19,7 @@ const AddCompanyPage = () => {
           Help the community by sharing information about a company you've worked with.
         </p>
 
-        <div className="bg-white border border-border rounded-3xl p-8">
+        <div className="bg-[var(--surface)] border border-border rounded-3xl p-8 shadow-sm">
           <AddCompanyForm onSuccess={handleSuccess} />
         </div>
       </div>

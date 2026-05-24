@@ -49,7 +49,7 @@ const ReviewCard = ({ review, onLikeUpdate }) => {
   };
 
   return (
-    <div className="bg-white border border-border rounded-2xl p-6 transition-all hover:shadow-sm">
+    <div className="bg-[var(--surface)] border border-border rounded-2xl p-6 transition-all hover:shadow-sm">
       <div className="flex justify-between items-start mb-3">
         <div>
           <div className="font-semibold text-text-h">{review.fullName}</div>

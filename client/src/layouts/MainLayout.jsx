@@ -5,7 +5,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="border-b border-border bg-white/80 backdrop-blur-md sticky top-0 z-40">
+    <nav className="border-b border-border bg-[var(--glass)] backdrop-blur-md sticky top-0 z-40">
       <div className="max-w-[1126px] mx-auto px-6 flex items-center justify-between h-20">
         <Link to="/" className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-2xl bg-accent flex items-center justify-center">
@@ -48,7 +48,7 @@ const MainLayout = ({ children }) => {
         {children}
       </main>
       <footer className="border-t border-border py-6 text-center text-xs text-text">
-        Built with ❤️ using MERN • Premium company review platform
+        Built with {"\u2764\uFE0F"} using MERN • Premium company review platform
       </footer>
     </div>
   );

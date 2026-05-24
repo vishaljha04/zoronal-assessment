@@ -5,9 +5,9 @@ import { formatFoundedDate, truncate } from '../../utils/formatters';
 
 const CompanyCard = ({ company }) => {
   return (
-    <div className="group bg-white border border-border rounded-2xl p-6 flex flex-col transition-all hover:shadow-custom hover:-translate-y-0.5">
+    <div className="group bg-[var(--surface)] border border-border rounded-2xl p-6 flex flex-col transition-all hover:shadow-custom hover:-translate-y-0.5">
       <div className="flex items-start gap-4 mb-4">
-        <div className="w-14 h-14 rounded-xl border border-border overflow-hidden flex-shrink-0 bg-white">
+        <div className="w-14 h-14 rounded-xl border border-border overflow-hidden flex-shrink-0 bg-[var(--surface)]">
           <img
             src={company.logo}
             alt={`${company.name} logo`}

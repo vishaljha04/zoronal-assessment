@@ -18,7 +18,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 10 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
-          className={`bg-white border border-border rounded-3xl shadow-2xl w-full ${sizeClasses[size]} overflow-hidden`}
+          className={`bg-[var(--surface)] border border-border rounded-3xl shadow-2xl w-full ${sizeClasses[size]} overflow-hidden`}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between px-6 py-5 border-b border-border">
