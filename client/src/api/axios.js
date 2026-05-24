@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://zoronal-assessment-xeoj.vercel.app/api';
+const raw = (import.meta.env.VITE_API_URL || 'https://zoronal-assessment-xeoj.vercel.app').trim();
+const normalized = raw.replace(/\/+$/, '');
+const API_URL = normalized.endsWith('/api') ? normalized : `${normalized}/api`;
+
+if (API_URL.includes('/auth/') || API_URL.includes('/companies') || API_URL.includes('/reviews')) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[config] VITE_API_URL should be the API base (e.g. https://backend.vercel.app/api). Current:',
+    API_URL
+  );
+}
 
 const api = axios.create({
   baseURL: API_URL,
